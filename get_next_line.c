@@ -6,7 +6,7 @@
 /*   By: eelisaro <eelisaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 07:10:54 by lsrw97            #+#    #+#             */
-/*   Updated: 2023/01/17 19:52:12 by eelisaro         ###   ########.fr       */
+/*   Updated: 2023/01/27 20:09:25 by eelisaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 // // if ture -> trunc temp
 
 // //
-#define BUFFER_SIZE 5
+// #define BUFFER_SIZE 5
 
 
 
@@ -151,7 +151,7 @@
 // 	if (!buffer)
 // 	// hello
 // 		buffer = malloc(read(fd, buffer, BUFFER_SIZE) + 1);
-	
+
 // 	line = malloc(ft_strlen(buffer));
 // 	//	if there isn't a \n in a buffer string
 // 	if(!eol[0])
@@ -173,7 +173,7 @@
 // 	return (line);
 // }
 
-#define BUFFER_SIZE 5
+#define BUFFER_SIZE 2
 
 size_t	ft_strlen(const char *s)
 {
@@ -204,6 +204,8 @@ int	strcopy(char *dst, char *src)
 	i = -1;
 	while (src[++i])
 		dst[i] = src[i];
+	dst[i] = '\0';
+	// printf("%s", dst);
 	return (i);
 }
 
@@ -218,25 +220,39 @@ void	concatbuffertemp(char *buffer, char *temp, int id)
 	{
 		temp[i++] = buffer[j];
 	}
-	temp[i] = '\0';
+
+	// temp[i] = '\0';
 
 }
 
-void	addBufferStringToLine(char *buffer, char *line, int state)
+char	*addBufferStringToLine(char *buffer, char *line, int state)
 {
 	int id;
 	char *temp;
+	int size;
 
-	temp = malloc(ft_strlen(buffer) + ft_strlen(line));
+	size = ft_strlen(buffer) + ft_strlen(line);
+	temp = (char *)malloc(size + 1);
+	printf("size: %d\n\n", size);
+	temp[size] = '\0';
+
 	if (line)
 		strcopy(temp, line);
 
 	id = getId(buffer, state);
 	concatbuffertemp(buffer, temp, id);
-	if(line)
-		free(line);
-	line = malloc(ft_strlen(temp) + 1);
-	line[ft_strlen(temp)] = '\0';
+
+	return (temp);
+	// printf("linemem: %p\n", line);
+	// if(line)
+	// 	free(line);
+	// printf("linemem: %p\n", line);
+
+	// line = malloc(ft_strlen(temp) + 1);
+	// printf("linemem: %p\n", line);
+	// line[ft_strlen(temp)] = '\0';
+	// strcopy(line, temp);
+	// printf("Line copied: %s\n%p", line, line);
 }
 
 void	convertBuffer(char *buffer)
@@ -246,46 +262,84 @@ void	convertBuffer(char *buffer)
 
 	j = 0;
 	i = 0;
+	// printf("%s", buffer);
 	while (buffer[i] != '\n')
 		i++;
 	while(buffer[++i])
-		buffer[j++] = buffer[i];
+		{
+			printf("\nBuffer: %s, i: %d, j: %d, buffer[%d]\n", buffer, i, j, buffer[i]);
+			buffer[j] = buffer[i];
+			j++;
+		}
 	buffer[j] = '\0';
+	// printf("buffer1: %d\n", j);
 }
 
 char	*get_next_line(int fd)
 {
 	static char *buffer;
-	char *line;
+	static char *line;
 	int i;
 	int size;
+	char *temp;
 
 	i = -1;
-
-	buffer = malloc(BUFFER_SIZE + 1);
-	size = read(fd, buffer, BUFFER_SIZE);
-	while (size <= BUFFER_SIZE)
-	buffer[size++] = '\0';
+	if (!buffer || !ft_strlen(buffer))
+	{
+		buffer = malloc(BUFFER_SIZE + 1);
+		size = read(fd, buffer, BUFFER_SIZE);
+	}
+	// printf("%d", size);
+	if (!size)
+		return (NULL);
+	while (size < BUFFER_SIZE)
+		buffer[size++] = '\0';
 	buffer[BUFFER_SIZE] = '\0';
-	printf("%zu", ft_strlen(buffer));
-	line = malloc(ft_strlen(buffer));
+	if (line)
+		free(line);
+	line = (char *)malloc(ft_strlen(buffer) + 1);
+	line[0] = 0;
+	line[1] = 0;
+	line[2] = 0;
 
 	while(1)
 	{
+		// printf("%d\n", i);
 		if(buffer[++i] == '\n')
 		{
-			addBufferStringToLine(buffer, line, 10);
+			temp = addBufferStringToLine(buffer, line, 10);
+			printf("%zu\n", ft_strlen(temp));
+			if(line)
+				free(line);
+			line = malloc(ft_strlen(temp) + 1);
+			strcopy(line, temp);
+			free(temp);
 			convertBuffer(buffer);
+			i = -1;
 			break;
 		}
 		else if(buffer[i] == '\0')
 		{
-			addBufferStringToLine(buffer, line, 0);
-			buffer[0] = '\0';
-			break;
+			temp = addBufferStringToLine(buffer, line, 0);
+			if(line)
+				free(line);
+			line = malloc(ft_strlen(temp) + 1);
+			strcopy(line, temp);
+			line[ft_strlen(temp)] = '\0';
+			free(temp);
+			size = read(fd, buffer, BUFFER_SIZE);
+				if (size)
+				{
+					while (size <= BUFFER_SIZE)
+						buffer[size++] = '\0';
+					i = -1;
+					continue;
+				}
+				buffer[0] = '\0';
+				break;
 		}
 	}
-	// printf("%d", size);
+	printf("Line: %s", line);
 	return (line);
 }
 
@@ -298,15 +352,5 @@ int main (void)
 	fds = open("test.txt", O_RDONLY);
 
 	get_next_line(fds);
-
-
-	// get_next_line(fds);
-	// printf("%s", get_next_line(fds));
-
-
-	// printf("%d", fds);
-		// get_next_line(fds);
-
-	// get_next_line(fds);
 	// get_next_line(fds);
 }
