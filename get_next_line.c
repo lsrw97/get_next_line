@@ -183,7 +183,11 @@ size_t	ft_strlen(const char *s)
 	if (s == NULL)
 		return (0);
 	while (s[i])
-		i++;
+		{
+			// printf("index: %d, address: %p, c: %d\n\n", i, s, s[i]);
+			i++;
+		}
+	
 	return (i);
 }
 
@@ -231,10 +235,14 @@ char	*addBufferStringToLine(char *buffer, char *line, int state)
 	char *temp;
 	int size;
 
-	size = ft_strlen(buffer) + ft_strlen(line);
-	printf("buffer: %s, buffer[0]: %d, buffer[1]: %d, buffer[2]: %d\n\n", buffer, buffer[0], buffer[1], buffer[2]);
+	size = ft_strlen(buffer);
+
+	if(line)
+		size += ft_strlen(line);
+	// printf("buffer: %s, buffer[0]: %d, buffer[1]: %d, buffer[2]: %d\n\n", buffer, buffer[0], buffer[1], buffer[2]);
 	// printf("buffern: %d\nBuffer: %s\n", ft_strlen(buffer), buffer);
 	temp = (char *)malloc(size + 1);
+
 	temp[size] = '\0';
 	
 	if (ft_strlen(line))
@@ -244,7 +252,6 @@ char	*addBufferStringToLine(char *buffer, char *line, int state)
 
 	id = getId(buffer, state);
 	concatbuffertemp(buffer, temp, id);
-	
 	return (temp);
 }
 
@@ -289,14 +296,21 @@ char	*get_next_line(int fd)
 		buffer = (char *)malloc(BUFFER_SIZE + 1);
 		size = read(fd, buffer, BUFFER_SIZE);
 	}
-	
+		
+
 	// printf("%d", size);
 	if (!size)
+	{
+		write(0, "(null)", 6);
 		return (NULL);
+	}
+		
 	while (size < BUFFER_SIZE)
 		buffer[size++] = '\0';
 	buffer[BUFFER_SIZE] = '\0';
-	line = (char *)malloc(ft_strlen(buffer) + 1);
+	// line = (char *)malloc(ft_strlen(buffer) + 1);
+	line = NULL;
+	// printf("line address: %p\n", line);
 	// printf("buffer[i]: %p\n", buffer);
 	while(1)
 	{
@@ -308,8 +322,6 @@ char	*get_next_line(int fd)
 			if(line)
 				free(line);
 			line = malloc(ft_strlen(temp) + 1);
-			
-
 			strcopy(line, temp);
 			// printf("\ntemp: %s, line[0]: %d, line[1]: %d, line[2]: %d, line[3]: %d, line[4]: %d\n", temp, line[0], line[1], line[2], line[3], line[4]);
 			free(temp);
@@ -338,12 +350,9 @@ char	*get_next_line(int fd)
 				break;
 		}
 	}
-	
-	printf("Line: %s", line);
+	write(0, line, ft_strlen(line));
 	return (line);
 }
-
-
 
 int main (void)
 {
@@ -351,6 +360,11 @@ int main (void)
 
 	fds = open("test.txt", O_RDONLY);
 
+	get_next_line(fds);
+	get_next_line(fds);
+	get_next_line(fds);
+	get_next_line(fds);
+	get_next_line(fds);
 	get_next_line(fds);
 	get_next_line(fds);
 }
