@@ -232,6 +232,7 @@ char	*addBufferStringToLine(char *buffer, char *line, int state)
 	int size;
 
 	size = ft_strlen(buffer) + ft_strlen(line);
+	printf("buffern: %d\nBuffer: %s\n", ft_strlen(buffer), buffer);
 	temp = (char *)malloc(size + 1);
 	printf("size: %d\n\n", size);
 	temp[size] = '\0';
@@ -267,7 +268,7 @@ void	convertBuffer(char *buffer)
 		i++;
 	while(buffer[++i])
 		{
-			printf("\nBuffer: %s, i: %d, j: %d, buffer[%d]\n", buffer, i, j, buffer[i]);
+			// printf("\nBuffer: %s, i: %d, j: %d, buffer[%d]\n", buffer, i, j, buffer[i]);
 			buffer[j] = buffer[i];
 			j++;
 		}
@@ -352,5 +353,6 @@ int main (void)
 	fds = open("test.txt", O_RDONLY);
 
 	get_next_line(fds);
-	// get_next_line(fds);
+	get_next_line(fds);
+	get_next_line(fds);
 }
