@@ -6,10 +6,9 @@
 /*   By: eelisaro <eelisaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:53 by eelisaro          #+#    #+#             */
-/*   Updated: 2023/02/05 19:35:21 by eelisaro         ###   ########.fr       */
+/*   Updated: 2023/02/05 22:06:59 by eelisaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "get_next_line.h"
 
@@ -24,14 +23,15 @@ size_t	ft_strlen(const char *s)
 			i++;
 	return (i + (s[i] == '\n'));
 }
+
 int	strcopy(char *dst, char *src, int index, char c)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if(!src)
+	if (!src)
 		return (0);
-	if(dst)
+	if (dst)
 		while (src[i] != c)
 			dst[index++] = src[i++];
 	if (c == '\n')
@@ -40,11 +40,11 @@ int	strcopy(char *dst, char *src, int index, char c)
 	return (index);
 }
 
-char *addBufferToString(char *line, char *buffer, int c, int index)
+char	*addbuffertostring(char *line, char *buffer, int c, int index)
 {
-	char *temp;
-	int size;
-	int i;
+	char	*temp;
+	int		size;
+	int		i;
 
 	i = 0;
 	size = 0;
@@ -54,16 +54,18 @@ char *addBufferToString(char *line, char *buffer, int c, int index)
 	strcopy(line, buffer, size, c);
 	if (c == '\n')
 	{
-		while(buffer[index])
-			buffer[i++] = buffer[++index];
+		while (buffer[++index])
+		{
+			buffer[i++] = buffer[index];
+			// printf("buffer[%d]: %d\n", index, buffer[index - 1]);
+		}
 		buffer[i] = 0;
 	}
 	else
-	{
-		while(i < BUFFER_SIZE)
+		while (i < BUFFER_SIZE)
 			buffer[i++] = 0;
-	}
-	if(temp)
+	// printf("BUFFER: %s\n", buffer);
+	if (temp)
 		free(temp);
 	return (line);
 }
