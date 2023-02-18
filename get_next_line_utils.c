@@ -6,7 +6,7 @@
 /*   By: eelisaro <eelisaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 15:12:53 by eelisaro          #+#    #+#             */
-/*   Updated: 2023/02/05 22:06:59 by eelisaro         ###   ########.fr       */
+/*   Updated: 2023/02/18 13:37:47 by eelisaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,15 @@ int	strcopy(char *dst, char *src, int index, char c)
 	return (index);
 }
 
+void	cleanbuffer(char *buffer)
+{
+	int	i;
+
+	i = -1;
+	while (++i <= BUFFER_SIZE)
+		buffer[i] = 0;
+}
+
 char	*addbuffertostring(char *line, char *buffer, int c, int index)
 {
 	char	*temp;
@@ -55,17 +64,40 @@ char	*addbuffertostring(char *line, char *buffer, int c, int index)
 	if (c == '\n')
 	{
 		while (buffer[++index])
-		{
 			buffer[i++] = buffer[index];
-			// printf("buffer[%d]: %d\n", index, buffer[index - 1]);
-		}
 		buffer[i] = 0;
 	}
 	else
 		while (i < BUFFER_SIZE)
 			buffer[i++] = 0;
-	// printf("BUFFER: %s\n", buffer);
 	if (temp)
 		free(temp);
+	return (line);
+}
+
+char	*write_line(char *buffer, char *line, int fd, int i)
+{
+	int	size;
+
+	while (++i >= 0)
+	{
+		if (!buffer[i] || buffer[i] == '\n')
+		{
+			size = buffer[i];
+			line = addbuffertostring(line, buffer, buffer[i], i);
+			if (!buffer[0])
+			{
+				cleanbuffer(buffer);
+				if (size)
+					break ;
+				size = read(fd, buffer, BUFFER_SIZE);
+				if (!size)
+					break ;
+				i = -1;
+				continue ;
+			}
+			break ;
+		}
+	}
 	return (line);
 }
