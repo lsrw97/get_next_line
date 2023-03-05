@@ -6,7 +6,7 @@
 /*   By: eelisaro <eelisaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 07:10:54 by lsrw97            #+#    #+#             */
-/*   Updated: 2023/02/18 13:38:13 by eelisaro         ###   ########.fr       */
+/*   Updated: 2023/03/05 15:50:38 by eelisaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,36 +26,36 @@ char	*get_next_line(int fd)
 	return (write_line(buffer, line, fd, -1));
 }
 
-// int main (void)
-// {
-// 	int	fds;
+int main (void)
+{
+	int	fds;
 
-// 	fds = open("test.txt", O_RDONLY);
-// 	char *str;
+	fds = open("test.txt", O_RDONLY);
+	char *str;
 
-// 	while(1)						
-// 	{
-// 		str = get_next_line(fds);
-// 		if (!str)
-// 			break;
-// 		printf("Line: %s", str);
-// 		free(str);
-// 	}
+	while(1)						
+	{
+		str = get_next_line(fds);
+		if (!str)
+			break;
+		printf("Line: %s", str);
+		free(str);
+	}
 
-// 	// str = get_next_line(STDIN_FILENO);
-// 	// printf("%d",strcmp(str, "0123456789\n"));
-// 	// printf("%s", str);
-// 	// free(str);
-// 	// str = get_next_line(STDIN_FILENO);
-// 	// printf("%d",strcmp(str, "012345678\n"));
-// 	// printf("%s", str);
-// 	// free(str);
-// 	// str = get_next_line(STDIN_FILENO);
-// 	// printf("%d",strcmp(str, "90123456789\n"));
-// 	// printf("%s", str);
-// 	// free(str);
-// 	// str = get_next_line(STDIN_FILENO);
-// 	// printf("%d",strcmp(str, "0123456789\n"));
-// 	// printf("%s", str);
-// 	// free(str);
-// }
+	// str = get_next_line(STDIN_FILENO);
+	// printf("%d",strcmp(str, "0123456789\n"));
+	// printf("%s", str);
+	// free(str);
+	// str = get_next_line(STDIN_FILENO);
+	// printf("%d",strcmp(str, "012345678\n"));
+	// printf("%s", str);
+	// free(str);
+	// str = get_next_line(STDIN_FILENO);
+	// printf("%d",strcmp(str, "90123456789\n"));
+	// printf("%s", str);
+	// free(str);
+	// str = get_next_line(STDIN_FILENO);
+	// printf("%d",strcmp(str, "0123456789\n"));
+	// printf("%s", str);
+	// free(str);
+}
