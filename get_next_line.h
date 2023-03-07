@@ -6,7 +6,7 @@
 /*   By: eelisaro <eelisaro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/05 19:41:35 by eelisaro          #+#    #+#             */
-/*   Updated: 2023/03/05 15:50:08 by eelisaro         ###   ########.fr       */
+/*   Updated: 2023/03/07 17:38:16 by eelisaro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <string.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1000000
+#  define BUFFER_SIZE 42
 # endif
 
 size_t	ft_strlen(const char *s);
